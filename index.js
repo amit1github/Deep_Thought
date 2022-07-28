@@ -24,18 +24,11 @@ client
 
 app.use(express.json());
 
-app.post("/create-data", (req, res) => {
-  db.collection("data").insertOne(
-    { text: req.body.text },
-    function (err, info) {
-    console.log(info.acknowledged)
-      res.json(info.acknowledged);
-      if (err) {
-        console.log(`${err}`);
-      }
-    }
-  );
-});
+// My routes
+const xyz = require("");
+
+// My routes with API
+app.use("/api", xyz);
 
 const port = process.env.PORT || 5000;
 
