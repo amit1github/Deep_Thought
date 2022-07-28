@@ -1,0 +1,16 @@
+{
+  "name": "taskone_deepthought",
+  "version": "1.0.0",
+  "description": "assignment for internship by deep thought - task one.",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "keywords": [],
+  "author": "amit kumar yadav",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.1",
+    "mongodb": "^4.8.1"
+  }
+}
