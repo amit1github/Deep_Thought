@@ -36,11 +36,33 @@ exports.getEvents = async (req, res) => {
 };
 
 exports.paginateEvents = async (req, res) => {
-  //
+
+//   exports.readProduct = async (req, res) => {
+//     try {
+//       const limitValue = req.query.limit || 2;
+//       const skipValue = req.query.skip || 0;
+//       let data = await ProductSchema.find()
+//         .populate("category")
+//         .limit(limitValue)
+//         .skip(skipValue);
+//       res.status(200).send(data);
+//       console.log(data);
+//     } catch (error) {
+//       res.send(error);
+//     }
+//   };
 };
 
 exports.updateEvent = async (req, res) => {
-  //
+    db.collection("Events").updateOne(req.body, function (err, info) {
+        if (err) {
+          console.log(err);
+          res.json(err);
+        } else {
+          console.log(info.acknowledged);
+          res.json(info.acknowledged);
+        }
+      });
 };
 
 exports.deleteEvent = async (req, res) => {
