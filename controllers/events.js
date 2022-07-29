@@ -1,4 +1,5 @@
 const { db} = require("../db_config");
+
 exports.createEvent = async (req, res) => {
     db.collection("createEvent").insertOne(req.body,
    function (err, info) {
@@ -11,3 +12,5 @@ exports.createEvent = async (req, res) => {
     }
    });
 }
+
+exports
