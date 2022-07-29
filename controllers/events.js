@@ -1,5 +1,6 @@
 const { db } = require("../db_config");
 
+// ! there will be file upload instead of url of image.
 exports.createEvent = async (req, res) => {
   db.collection("Events").insertOne(req.body, function (err, info) {
     if (err) {
