@@ -1,34 +1,24 @@
 const express = require("express");
-const { MongoClient } = require("mongodb");
+const { client } = require("./db_config");
 
 const app = express();
-
-const url = "mongodb://localhost:27017";
-const client = new MongoClient(url);
-
-// database name
-const dbName = "deepThought_taskOne";
-let db;
+app.use(express.json());
 
 // database connection
 client
   .connect()
   .then(() => {
-    db = client.db(dbName);
-    // app.listen(5000);
     console.log(`MongoDB connected successfully`);
   })
   .catch((err) => {
     console.log(`Error connecting mongodb ` + err);
   });
 
-app.use(express.json());
-
 // My routes
-const xyz = require("");
+const eventRoutes = require("./routes/events");
 
 // My routes with API
-app.use("/api", xyz);
+app.use("/api/v3/app", eventRoutes);
 
 const port = process.env.PORT || 5000;
 
