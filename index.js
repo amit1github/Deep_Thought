@@ -17,7 +17,7 @@ client
 // My routes
 const eventRoutes = require("./routes/events");
 
-// My routes with API
+// routes with baseUrl
 app.use("/api/v3/app", eventRoutes);
 
 const port = process.env.PORT || 5000;
