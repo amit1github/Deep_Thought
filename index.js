@@ -1,12 +1,11 @@
 const express = require("express");
-const { client } = require("./db_config");
+const dbConnect = require("./db_config");
 
 const app = express();
 app.use(express.json());
 
 // database connection
-client
-  .connect()
+dbConnect()
   .then(() => {
     console.log(`MongoDB connected successfully`);
   })
