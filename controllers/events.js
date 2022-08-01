@@ -1,11 +1,11 @@
 const dbConnect = require("../db_config");
 const multer = require("multer");
+const path = require("path");
 
 // multer upload
 const upload = multer({
   storage: multer.diskStorage({
     destination: function (req, file, cb) {
-      console.log(req.body.internalUserID);
       cb(null, "uploads");
     },
     filename: function (req, file, cb) {
@@ -17,11 +17,11 @@ const upload = multer({
 exports.createEvent = async (req, res) => {
   const db = await dbConnect();
   try {
-    upload(req, res, function (err) {
+    upload(req, res, (err) => {
       if (err) {
-        return res.end("Error uploading file.");
+        return res.send("Error uploading file.");
       }
-      res.end("File is uploaded");
+      res.send(req.filename);
     });
 
     let data = await db.insertOne(req.body);
@@ -88,14 +88,17 @@ exports.updateEvent = async (req, res) => {
 };
 
 exports.deleteEvent = async (req, res) => {
+  const db = await dbConnect();
   try {
     if (Object.keys(req.query).length !== 0) {
-      let data = await db.collection("Events").deleteOne(req.query);
-      console.log(data);
-      res.send(data);
+      let data = await db.deleteOne({_id: req.params._id});
+      if (data.acknowledged) {
+        console.log("record deleted");
+        res.json(data);
+      }
     }
   } catch (error) {
-    // console.log(error);
+    console.log(error);
     res.send(error);
   }
 };
