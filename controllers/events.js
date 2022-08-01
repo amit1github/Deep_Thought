@@ -87,6 +87,7 @@ exports.updateEvent = async (req, res) => {
   });
 };
 
+// ! unable to Delete an event --- deleteCount: 0 but is acknow: true
 exports.deleteEvent = async (req, res) => {
   const db = await dbConnect();
   try {
