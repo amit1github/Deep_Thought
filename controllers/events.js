@@ -1,7 +1,7 @@
 const dbConnect = require("../db_config");
 const multer = require("multer");
 const path = require("path");
-const ObjectId = require('mongodb').ObjectId;
+const ObjectId = require("mongodb").ObjectId;
 // multer upload
 const upload = multer({
   storage: multer.diskStorage({
@@ -89,13 +89,11 @@ exports.updateEvent = async (req, res) => {
 
 // ! unable to Delete an event --- deleteCount: 0 but acknow: true
 exports.deleteEvent = async (req, res) => {
-  console.log("entered");
   const db = await dbConnect();
   try {
     if (Object.keys(req.query).length !== 0) {
-      console.log( req.query._id);
-      let data = await db.deleteMany({_id:new ObjectId(req.query._id)} );
-      console.log(data);
+      console.log(req.query._id);
+      let data = await db.deleteMany({ _id: new ObjectId(req.query._id) });
       if (data.acknowledged) {
         console.log("record deleted");
         res.json(data);
