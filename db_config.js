@@ -6,7 +6,7 @@ const client = new MongoClient(url);
 
 const dbConnect = async () => {
   let result = await client.connect();
-  db = result.db(dbName);
+ const db = result.db(dbName);
   return db.collection("Events");
 };
 
