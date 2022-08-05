@@ -1,6 +1,6 @@
 const express = require("express")
 const router = express.Router();
-const { createEvent, getEvents, paginateEvents, deleteEvent, updateEvent } = require("../controllers/events")
+const { createEvent, getEvents, paginateEvents, deleteEvent, updateEvent, fileUpload } = require("../controllers/events")
 
 router.post("/events", createEvent)
 

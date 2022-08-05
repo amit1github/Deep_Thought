@@ -1,39 +1,110 @@
 const dbConnect = require("../db_config");
-const multer = require("multer");
-const path = require("path");
 const ObjectId = require("mongodb").ObjectId;
-// multer upload
-const upload = multer({
-  storage: multer.diskStorage({
-    destination: function (req, file, cb) {
-      cb(null, "uploads");
-    },
-    filename: function (req, file, cb) {
-      cb(null, file.fieldname + "_" + Date.now() + ".png");
-    },
-  }),
-}).single("myimg");
+// const multer = require("multer");
+const path = require("path");
+const fs = require("fs");
+const formidable = require("formidable");
+
+
+
+// try {
+//   let data = await db.insertOne(req.body);
+//   if (data.acknowledged) {
+//     console.log("data inserted");
+//     res.json(data);
+//   }
 
 exports.createEvent = async (req, res) => {
   const db = await dbConnect();
-  try {
-    upload(req, res, (err) => {
-      if (err) {
-        return res.send("Error uploading file.");
-      }
-      res.send(req.filename);
-    });
 
-    let data = await db.insertOne(req.body);
-    if (data.acknowledged) {
-      console.log("data inserted");
-      res.json(data);
+  let form = new formidable.IncomingForm();
+  
+  const uploadFolder = path.join(__dirname, "../uploads", "files")
+  
+  // basic configuration
+  form.keepExtensions = true;
+  form.multiples = true
+  form.maxFileSize = 50 * 1024 * 1024 // 5 MB
+  form.uploadDir = uploadFolder
+  // console.log(" form after", form);
+  
+  form.parse(req, async (err, fields, files) => {
+    console.log("fields: ",fields);
+    console.log("files: ", files);
+    if (err) {
+      console.log("Error parsing the files");
+      return res.status(400).json({
+        status: "Fail",
+        message: "There was an error parsing the files",
+        error: err,
+      });
     }
-  } catch (error) {
-    console.log(error);
-    res.status(400).json(error);
-  }
-};
+ 
+    if (!files.myFile.length) {
+      const file = files.myFile
+  
+      const isValid = isFileValid(true)
+  
+      const fileName = encodeURIComponent(file.name.replace(/\s/g, "-"))
+  
+      if (!isValid) {
+        return res.status(400).json({
+          status: "Fail",
+          message: "The file type is not a valid type",
+        });
+      }
+  
+      try {
+        // renames the file in the directory
+        fs.renameSync(file.path, join(uploadFolder, fileName));
+      } catch (error) {
+        console.log(error);
+      }
+  
+      try {
+        // stores the fileName in the database
+        const newFile = await File.create({
+          name: `files/${fileName}`,
+        });
+        return res.status(200).json({
+          status: "success",
+          message: "File created successfully!!",
+        });
+      } catch (error) {
+        res.json({
+          error,
+        });
+      }
+    } else {
+      // Multiple files
+    }
+ 
+  }); 
+
+}
+
+//create event
+// exports.createEvent = async (req, res) => {
+//   const db = await dbConnect();
+
+//   try {
+//     upload(req, res, (err) => {
+//       if (err) {
+//         return res.send("Error uploading file.");
+//       }
+//       res.send(req.filename);
+//     });
+
+//     let data = await db.insertOne(req.body);
+//     if (data.acknowledged) {
+//       console.log("data inserted");
+//       res.json(data);
+//     }
+//   } catch (error) {
+//     console.log(error);
+//     res.status(400).json(error);
+//   }
+// };
 
 exports.getEvents = async (req, res) => {
   // try {
@@ -87,7 +158,7 @@ exports.updateEvent = async (req, res) => {
   });
 };
 
-// ! unable to Delete an event --- deleteCount: 0 but acknow: true
+// delete event
 exports.deleteEvent = async (req, res) => {
   const db = await dbConnect();
   try {
